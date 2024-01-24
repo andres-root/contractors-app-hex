@@ -1,8 +1,10 @@
 import { ApiRepository } from "../../../adapters/output/repositories/api";
 import { ApiInputPort } from "../../../ports/input/api";
 import { ContractInterface, serializeContractOutput } from "../../../adapters/input/rest/serializers/contract"
-import { Job, JobAttributes } from "../../../core/models/job";
+import { JobAttributes } from "../../../core/models/job";
 import { serializeJobOutput } from "../../../adapters/input/rest/serializers/job";
+import { ProfileAttributes } from "../../models/profile";
+import { serializeProfileOutput } from "../../../adapters/input/rest/serializers/profile";
 
 
 export class ApiApp implements ApiInputPort {
@@ -28,9 +30,9 @@ export class ApiApp implements ApiInputPort {
     return serializeJobOutput(await this.apiRepository.payJob(JobId, profileId));
   }
 
-  // async deposit(id: number, deposit: number): Promise<{}> {
-  //   return {}
-  // }
+  async depositBalance(id: number, deposit: number, profileId: number): Promise<ProfileAttributes> {
+    return serializeProfileOutput(await this.apiRepository.depositBalance(id, deposit, profileId));
+  }
 
   // async bestProfession(start: string, end: string): Promise<{}> {
   //   return {}

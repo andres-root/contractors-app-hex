@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import db from "../../adapters/output/db/db";
 
 
-interface ProfileAttributes {
+export interface ProfileAttributes {
   id: number;
   firstName: string;
   lastName: string;
