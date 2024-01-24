@@ -52,7 +52,7 @@ apiRouter.post("/jobs/:job_id/pay", getProfile, async (req: RequestWithProfile, 
       data: job
     });
   } catch (error) {
-    return res.status(500).send({ error: "failed to find job" });
+    return res.status(500).send({ error: "failed to pay job" });
   }
 });
 //   return res.json({"data": "It works!"})

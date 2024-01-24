@@ -100,8 +100,11 @@ export class ApiRepository implements ApiOutputPort {
             throw new Error('Contractor not found');
         }
 
-        await profile.update({ balance: profile.balance - job.price }, { transaction: t });
-        await contractor.update({ balance: contractor.balance + job?.price }, { transaction: t });
+        // TODO: Add numerical validations
+        const newClientBalance = profile.balance - Number(job.price);
+        const newContractorBalance = contractor.balance + Number(job.price);
+        await profile.update({ balance: newClientBalance }, { transaction: t });
+        await contractor.update({ balance: newContractorBalance }, { transaction: t });
         await job.update({ paid: true, paymentDate: new Date() }, { transaction: t });
         return job;
     });
