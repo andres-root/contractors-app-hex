@@ -4,6 +4,7 @@ import { ApiOutputPort } from '../../../ports/output/api';
 import { Contract, Job, Profile } from "../../../core/models";
 import { ContractOutput } from '../../../core/models/contract';
 import { JobOutput } from '../../../core/models/job';
+import { ProfileOutput } from '../../../core/models/profile';
 
 import db from "../db/db";
 
@@ -118,9 +119,35 @@ export class ApiRepository implements ApiOutputPort {
   }
 
 
-  // async updateBalance(id: number, deposit: number): Promise<any> {
-  //     return Promise.resolve({});
-  // }
+  async depositBalance(id: number, deposit: number, profileId: number): Promise<ProfileOutput> {
+    try {
+
+      const result = await db.transaction(async (t) => {
+        const profile = await Profile.findOne({ where: { id: profileId } });
+
+        if (!profile) {
+          throw new Error('Profile not found');
+        }
+
+        if(deposit > (profile.balance * 0.25)) {
+          throw new Error('Deposit too high');
+        }
+
+        if (!profile) {
+            throw new Error('Profile not found');
+        }
+
+        await profile.update({ balance: profile.balance + deposit }, { transaction: t });
+        return profile;
+      });
+
+      console.log('Transaction has been committed', result);
+      return result;
+    } catch (error) {
+      console.error('Transaction was rolled back due to an error', error);
+      throw error;
+    }
+  }
 
   // async getBestProfession(start: string, end: string): Promise<any> {
   //     return Promise.resolve({});
