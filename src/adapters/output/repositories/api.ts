@@ -151,34 +151,31 @@ export class ApiRepository implements ApiOutputPort {
 
   async findBestProfession(startDate: string, endDate: string): Promise<BestProfessionOutput> {
     try {
-      // TODO: Fix type
       const result: any = await Job.findAll({
         attributes: [
-          [sequelize.fn('SUM', sequelize.col('price')), 'total_earnings']
+          [sequelize.fn('SUM', sequelize.col('Job.price')), 'total_earnings'],
+          [sequelize.col('Contract->Contractor.profession'), 'profession']
         ],
         include: [{
           model: Contract,
           attributes: [],
           include: [{
-              model: Profile,
-              as: 'Contractor',
-              attributes: ['profession'],
-              where: {
-                type: 'contractor'
-              }
-            }]
-          }],
-          where: {
-            paid: true,
-            paymentDate: {
-              [Op.between]: [startDate, endDate]
-            }
-          },
-          group: ['Contract->Contractor.profession'],
-          order: [[sequelize.literal('total_earnings'), 'DESC']],
-          limit: 1,
-          raw: true
+            model: Profile,
+            as: 'Contractor',
+            attributes: [],
+            where: { type: 'contractor' }
+          }]
+        }],
+        where: {
+          paid: true,
+          paymentDate: { [Op.between]: [startDate, endDate] }
+        },
+        group: ['Contract->Contractor.profession'],
+        order: [[sequelize.fn('SUM', sequelize.col('Job.price')), 'DESC']],
+        limit: 1,
+        raw: true,
       });
+
       return result;
     } catch (error) {
       console.error('error fetching best profession:', error);

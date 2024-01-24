@@ -97,7 +97,7 @@ apiRouter.get("/admin/best-profession", async (req: Request, res: Response) => {
   }
 });
 
-apiRouter.get("/best-clients", async (req: Request, res: Response) => {
+apiRouter.get("/admin/best-clients", async (req: Request, res: Response) => {
     const startDate = req.query.start;
     const endDate = req.query.end;
     const limit = req.query.limit || 2;
