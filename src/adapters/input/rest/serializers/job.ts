@@ -1,7 +1,7 @@
 import { JobOutput, JobAttributes } from "../../../../core/models/job";
 
 
-export function serializeJobOutput(job: JobOutput): JobAttributes {
+export const serializeJobOutput = (job: JobOutput): JobAttributes => {
   return {
     id: job.id,
     description: job.description,
@@ -10,4 +10,4 @@ export function serializeJobOutput(job: JobOutput): JobAttributes {
     paymentDate: job.paymentDate,
     ContractId: job.ContractId,
   };
-}
+};

@@ -6,6 +6,7 @@ import { serializeJobOutput } from "../../../adapters/input/rest/serializers/job
 import { ProfileAttributes } from "../../models/profile";
 import { serializeProfileOutput } from "../../../adapters/input/rest/serializers/profile";
 import { BestProfessionOutput, BestClientsOutput } from "../../models/interfaces";
+import { serializeBestClientsOutput, BestclientsAttributes} from "../../../adapters/input/rest/serializers/clients";
 
 
 export class ApiApp implements ApiInputPort {
@@ -39,7 +40,7 @@ export class ApiApp implements ApiInputPort {
     return await this.apiRepository.findBestProfession(startDate, endDate);
   }
 
-  async getBestClients(startDate: string, endDate: string, limit: number):  Promise<BestClientsOutput[]> {
-    return await this.apiRepository.findBestClients(startDate, endDate, limit);
+  async getBestClients(startDate: string, endDate: string, limit: number):  Promise<BestclientsAttributes[]> {
+    return (await this.apiRepository.findBestClients(startDate, endDate, limit)).map(serializeBestClientsOutput);
   }
 }

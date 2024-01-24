@@ -8,7 +8,7 @@ export interface ContractInterface {
   status: 'new' | 'in_progress' | 'terminated';
 }
 
-export function serializeContractOutput(contract: ContractOutput): ContractInterface {
+export const serializeContractOutput = (contract: ContractOutput): ContractInterface => {
   return {
     id: contract.id,
     terms: contract.terms,
@@ -16,4 +16,4 @@ export function serializeContractOutput(contract: ContractOutput): ContractInter
     ContractorId: contract.ContractorId,
     status: contract.status,
   };
-}
+};
