@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 import { ApiOutputPort } from '../../../ports/output/api';
 import { Contract, Job, Profile } from "../../../core/models";
 import { ContractOutput } from '../../../core/models/contract';
+import { JobOutput } from '../../../core/models/job';
 
 
 export class ApiRepository implements ApiOutputPort {
@@ -40,9 +41,33 @@ export class ApiRepository implements ApiOutputPort {
     }
   }
 
-  // async findUnpaidJobs(id: number): Promise<any[]> {
-  //     return Promise.resolve([]);
-  // }
+  async findUnpaidJobs(profileId: number): Promise<JobOutput[]> {
+    try {
+      const jobs = await Job.findAll({
+          where: {
+            paid: false
+          },
+          include: [{
+            model: Contract,
+            where: {
+              [Op.or]: [
+                { ContractorId: profileId },
+                { ClientId: profileId }
+              ]
+            }
+          }]
+        });
+
+        if (!jobs) {
+          throw new Error("jobs not found");
+        }
+
+        return jobs;
+    } catch (error) {
+      console.error('error fetching unpaid jobs:', error);
+      throw error;
+    }
+  }
 
   // async updateJobPayment(id: number): Promise<any> {
   //     return Promise.resolve({});

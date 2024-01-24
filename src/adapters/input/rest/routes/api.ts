@@ -30,11 +30,16 @@ apiRouter.get("/contracts/:id?", getProfile, async (req: RequestWithProfile, res
   }
 });
 
-apiRouter.get("/jobs/unpaid/:id", async (req: Request, res: Response) => {
-  return res.json({"data": "It works!"})
-  // const { id } = req.params;
-  // const jobs = await apiApp.getUnpaidJobs(id);
-  // res.json(jobs);
+apiRouter.get("/jobs/unpaid", getProfile, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const jobs = await apiApp.getUnpaidJobs(Number(id));
+    return res.status(200).send({
+      data: jobs
+    });
+  } catch (error) {
+    return res.status(500).send({ error: "failed to find job" });
+  }
 });
 
 // apiRouter.put("/jobs/:id/pay", async (req: Request, res: Response) => {

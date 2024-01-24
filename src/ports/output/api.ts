@@ -1,10 +1,11 @@
-import { ContractInput, ContractOutput } from "../../core/models/contract";
+import { ContractOutput } from "../../core/models/contract";
+import { JobOutput } from "../../core/models/job";
 
 
 export interface ApiOutputPort {
   findContractsById(id: number, profileId: number): Promise<ContractOutput>;
   findAllContracts(profileId: number): Promise<ContractOutput[]>
-  // findUnpaidJobs(id: number): Promise<any[]>;
+  findUnpaidJobs(profileId: number): Promise<JobOutput[]>;
   // updateJobPayment(id: number): Promise<any>;
   // updateBalance(id: number, deposit: number): Promise<any>;
   // getBestProfession(start: string, end: string): Promise<any>;

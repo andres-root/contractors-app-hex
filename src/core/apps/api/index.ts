@@ -1,6 +1,8 @@
 import { ApiRepository } from "../../../adapters/output/repositories/api";
 import { ApiInputPort } from "../../../ports/input/api";
 import { ContractInterface, serializeContractOutput } from "../../../adapters/input/rest/serializers/contract"
+import { Job, JobAttributes } from "../../../core/models/job";
+import { serializeJobOutput } from "../../../adapters/input/rest/serializers/job";
 
 
 export class ApiApp implements ApiInputPort {
@@ -18,9 +20,9 @@ export class ApiApp implements ApiInputPort {
     return (await this.apiRepository.findAllContracts(profileId)).map(serializeContractOutput);
   }
 
-  // async getUnpaidJobs(id: number): Promise<{}[]> {
-  //   return [{}]
-  // }
+  async getUnpaidJobs(profileId: number): Promise<JobAttributes[]> {
+    return (await this.apiRepository.findUnpaidJobs(profileId)).map(serializeJobOutput);
+  }
 
   // async payJob(id: number): Promise<{}> {
   //   return {}

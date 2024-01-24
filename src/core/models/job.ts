@@ -3,7 +3,7 @@ import db from "../../adapters/output/db/db";
 import { Contract } from "./contract";
 
 
-interface JobAttributes {
+export interface JobAttributes {
   id: number;
   description: string;
   price: number;
@@ -13,7 +13,7 @@ interface JobAttributes {
 }
 
 export interface JobInput extends Optional<JobAttributes, "id" | "ContractId" | "paid" | "paymentDate"> {}
-export interface JobOutput extends Required<JobAttributes> {}
+export interface JobOutput extends Optional<JobAttributes, "paid" | "paymentDate" | "ContractId"> {}
 export class Job extends Model<JobAttributes, JobInput> implements JobAttributes {
   public id!: number;
   public description!: string;
