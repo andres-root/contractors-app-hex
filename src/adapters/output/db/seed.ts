@@ -1,7 +1,6 @@
 import { Profile, Contract, Job } from '../../../core/models';
 
 
-
 export const seedDB = async() =>{
   // create tables
   await Profile.sync({ force: true });
@@ -165,63 +164,63 @@ export const seedDB = async() =>{
       description: 'work',
       price: 2020,
       paid:true,
-      paymentDate:'2020-08-15T19:11:26.737Z',
+      paymentDate: new Date('2020-08-15T19:11:26.737Z'),
       ContractId: 7,
     }),
     Job.create({
       description: 'work',
       price: 200,
       paid:true,
-      paymentDate:'2020-08-15T19:11:26.737Z',
+      paymentDate: new Date('2020-08-15T19:11:26.737Z'),
       ContractId: 2,
     }),
     Job.create({
       description: 'work',
       price: 200,
       paid:true,
-      paymentDate:'2020-08-16T19:11:26.737Z',
+      paymentDate: new Date('2020-08-16T19:11:26.737Z'),
       ContractId: 3,
     }),
     Job.create({
       description: 'work',
       price: 200,
       paid:true,
-      paymentDate:'2020-08-17T19:11:26.737Z',
+      paymentDate: new Date('2020-08-17T19:11:26.737Z'),
       ContractId: 1,
     }),
     Job.create({
       description: 'work',
       price: 200,
       paid:true,
-      paymentDate:'2020-08-17T19:11:26.737Z',
+      paymentDate: new Date('2020-08-17T19:11:26.737Z'),
       ContractId: 5,
     }),
     Job.create({
       description: 'work',
       price: 21,
       paid:true,
-      paymentDate:'2020-08-10T19:11:26.737Z',
+      paymentDate: new Date('2020-08-10T19:11:26.737Z'),
       ContractId: 1,
     }),
     Job.create({
       description: 'work',
       price: 21,
       paid:true,
-      paymentDate:'2020-08-15T19:11:26.737Z',
+      paymentDate: new Date('2020-08-15T19:11:26.737Z'),
       ContractId: 2,
     }),
     Job.create({
       description: 'work',
       price: 121,
       paid:true,
-      paymentDate:'2020-08-15T19:11:26.737Z',
+      paymentDate: new Date('2020-08-15T19:11:26.737Z'),
       ContractId: 3,
     }),
     Job.create({
       description: 'work',
       price: 121,
       paid:true,
-      paymentDate:'2020-08-14T23:11:26.737Z',
+      paymentDate: new Date('2020-08-14T23:11:26.737Z'),
       ContractId: 3,
     }),
 

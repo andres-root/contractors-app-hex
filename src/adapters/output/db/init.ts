@@ -5,9 +5,9 @@ const isTest = process.env.NODE_ENV !== 'test'
 
 const dbInit = async () => {
   try {
-    await Job.sync({ force: isTest, alter: isDev || isTest });
-    await Contract.sync({ force: isTest, alter: isDev || isTest });
     await Profile.sync({ force: isTest, alter: isDev || isTest });
+    await Contract.sync({ force: isTest, alter: isDev || isTest });
+    await Job.sync({ force: isTest, alter: isDev || isTest });
   } catch (error) {
     console.error('error initializing db:', error);
     throw error;

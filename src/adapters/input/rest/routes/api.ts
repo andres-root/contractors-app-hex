@@ -1,52 +1,69 @@
 import express, { Request, Response } from "express";
 import { ApiApp } from "../../../../core/apps/api";
 import { ApiRepository } from "../../../output/repositories/api";
+import { getProfile, RequestWithProfile } from "../middlewares"
 
-const homeRouter = express.Router();
+const apiRouter = express.Router();
 const apiRepository = new ApiRepository();
 const apiApp = new ApiApp(apiRepository);
 
 
-homeRouter.get("/contracts/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const contracts = await apiApp.getContractsById(id);
-  res.json(contracts);
+apiRouter.get("/contracts/:id?", getProfile, async (req: RequestWithProfile, res: Response) => {
+  try {
+    const { id } = req.params;
+    const profile = req.profile;
+
+    if (req.params.id) {
+      const contract = await apiApp.getContractsById(Number(id), Number(profile?.id));
+      return res.status(200).send({
+        data: contract
+      });
+    }
+
+    const contracts = await apiApp.getAllContracts(Number(profile?.id));
+    return res.status(200).send({
+      data: contracts
+    });
+
+  } catch (error) {
+    return res.status(500).send({ error: "failed to find job" });
+  }
 });
 
-homeRouter.get("/contracts", async (req: Request, res: Response) => {
-  const contracts = await apiApp.getAllContracts();
-  res.json(contracts);
+apiRouter.get("/jobs/unpaid/:id", async (req: Request, res: Response) => {
+  return res.json({"data": "It works!"})
+  // const { id } = req.params;
+  // const jobs = await apiApp.getUnpaidJobs(id);
+  // res.json(jobs);
 });
 
-homeRouter.get("/jobs/unpaid/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const jobs = await apiApp.getUnpaidJobs(id);
-  res.json(jobs);
-});
+// apiRouter.put("/jobs/:id/pay", async (req: Request, res: Response) => {
+//   return res.json({"data": "It works!"})
+//   const { id } = req.params;
+//   const job = await apiApp.payJob(id);
+//   res.json(job);
+// });
 
-homeRouter.put("/jobs/:id/pay", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const job = await apiApp.payJob(id);
-  res.json(job);
-});
+// apiRouter.put("/balance/:id", async (req: Request, res: Response) => {
+//   const { id } = req.params;
+//   return res.json({"data": "It works!"})
+//   const { deposit } = req.body;
+//   const balance = await apiApp.deposit(id, deposit);
+//   res.json(balance);
+// });
 
-homeRouter.put("/balance/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { deposit } = req.body;
-  const balance = await apiApp.deposit(id, deposit);
-  res.json(balance);
-});
+// apiRouter.get("/best-profession", async (req: Request, res: Response) => {
+//   return res.json({"data": "It works!"})
+//   const { start, end } = req.query;
+//   const profession = await apiApp.bestProfession(start, end);
+//   res.json(profession);
+// });
 
-homeRouter.get("/best-profession", async (req: Request, res: Response) => {
-  const { start, end } = req.query;
-  const profession = await apiApp.bestProfession(start, end);
-  res.json(profession);
-});
+// apiRouter.get("/best-clients", async (req: Request, res: Response) => {
+//   return res.json({"data": "It works!"})
+//   const { start, end } = req.query;
+//   const clients = await apiApp.bestClients(start, end);
+//   res.json(clients);
+// });
 
-homeRouter.get("/best-clients", async (req: Request, res: Response) => {
-  const { start, end } = req.query;
-  const clients = await apiApp.bestClients(start, end);
-  res.json(clients);
-});
-
-export default homeRouter;
+export default apiRouter;

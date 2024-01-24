@@ -1,37 +1,40 @@
-import { JobRepository } from "../../../adapters/output/repositories/job";
-import { GetAllJobsFilter } from "../../../adapters/output/repositories/types";
-import { JobInput, JobOutput, JobAttributes } from "../../../core/models/job";
-import { serializeJobOutput, JobInterface } from "../../../adapters/input/rest/serializers/job";
-import { JobInputPort } from "../../../ports/input/job";
+import { ApiRepository } from "../../../adapters/output/repositories/api";
+import { ApiInputPort } from "../../../ports/input/api";
+import { ContractInterface, serializeContractOutput } from "../../../adapters/input/rest/serializers/contract"
 
 
 export class ApiApp implements ApiInputPort {
   constructor(
-    private profileRepository: ProfileRepository,
-    private contractRepository: contractRepository,
-    private jobRepository: JobRepository
+    private apiRepository: ApiRepository,
   ) {
-    this.profileRepository = profileRepository;
-    this.contractRepository = contractRepository;
-    this.jobRepository = jobRepository;
-  }
-  async getAllJobs(): Promise<JobInterface[]> {
-    return (await this.jobRepository.getAllJobs()).map(serializeJobOutput);
+    this.apiRepository = apiRepository;
   }
 
-  async createJob(payload: JobAttributes): Promise<JobInterface> {
-    return serializeJobOutput(await this.jobRepository.createJob(payload));
+  async getContractsById(id: number, profileId: number): Promise<ContractInterface> {
+    return serializeContractOutput(await this.apiRepository.findContractsById(id, profileId));
   }
 
-  async updateJob(id: number, payload: Partial<JobInput>): Promise<JobInterface> {
-    return serializeJobOutput(await this.jobRepository.updateJob(id, payload));
+  async getAllContracts(profileId: number): Promise<ContractInterface[]> {
+    return (await this.apiRepository.findAllContracts(profileId)).map(serializeContractOutput);
   }
 
-  async getJobById(id: number): Promise<JobInterface> {
-    return serializeJobOutput(await this.jobRepository.getJobById(id));
-  }
+  // async getUnpaidJobs(id: number): Promise<{}[]> {
+  //   return [{}]
+  // }
 
-  async deleteJobById(id: number): Promise<boolean> {
-    return await this.jobRepository.deleteJobById(id);
-  }
+  // async payJob(id: number): Promise<{}> {
+  //   return {}
+  // }
+
+  // async deposit(id: number, deposit: number): Promise<{}> {
+  //   return {}
+  // }
+
+  // async bestProfession(start: string, end: string): Promise<{}> {
+  //   return {}
+  // }
+
+  // async bestClients(start: string, end: string):  Promise<{}[]> {
+  //   return [{}]
+  // }
 }

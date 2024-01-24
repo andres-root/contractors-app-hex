@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import db from "../../adapters/output/db/db";
 import { Profile } from "./profile";
 
@@ -6,10 +6,15 @@ import { Profile } from "./profile";
 interface ContractAttributes {
   id: number;
   terms: string;
+  ClientId?: number;
+  ContractorId?: number;
   status: 'new' | 'in_progress' | 'terminated';
 }
 
-export class Contract extends Model<ContractAttributes> implements ContractAttributes {
+export interface ContractInput extends Optional<ContractAttributes, "id" | "ClientId" | "ContractorId"> {}
+export interface ContractOutput extends Optional<ContractAttributes, "ClientId" | "ContractorId"> {}
+
+export class Contract extends Model<ContractAttributes, ContractInput> implements ContractAttributes {
   public id!: number;
   public terms!: string;
   public status!: 'new' | 'in_progress' | 'terminated';

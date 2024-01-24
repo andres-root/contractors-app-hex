@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import db from "../../adapters/output/db/db";
 
 
@@ -11,7 +11,9 @@ interface ProfileAttributes {
   type: 'client' | 'contractor';
 }
 
-export class Profile extends Model<ProfileAttributes> implements ProfileAttributes {
+export interface ProfileInput extends Optional<ProfileAttributes, "id"> {}
+export interface ProfileOutput extends Required<ProfileAttributes> {}
+export class Profile extends Model<ProfileAttributes, ProfileInput> implements ProfileAttributes {
   public id!: number;
   public firstName!: string;
   public lastName!: string;

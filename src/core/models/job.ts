@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import db from "../../adapters/output/db/db";
 import { Contract } from "./contract";
 
@@ -7,11 +7,14 @@ interface JobAttributes {
   id: number;
   description: string;
   price: number;
-  paid: boolean;
-  paymentDate: Date | null;
+  paid?: boolean;
+  paymentDate?: Date | null;
+  ContractId?: number;
 }
 
-export class Job extends Model<JobAttributes> implements JobAttributes {
+export interface JobInput extends Optional<JobAttributes, "id" | "ContractId" | "paid" | "paymentDate"> {}
+export interface JobOutput extends Required<JobAttributes> {}
+export class Job extends Model<JobAttributes, JobInput> implements JobAttributes {
   public id!: number;
   public description!: string;
   public price!: number;

@@ -3,6 +3,6 @@ import apiRouter from "./api";
 
 const router = Router();
 
-router.use("/home", apiRouter);
+router.use("/", apiRouter);
 
 export default router;

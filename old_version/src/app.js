@@ -11,7 +11,7 @@ app.set('models', sequelize.models)
 
 app.get('/contracts/:id',getProfile ,async (req, res) =>{
     const { Contract } = req.app.get('models')
-    
+
     const profile = req.profile;
     const contract = await Contract.findOne({where: {ClientId: profile.id}})
     if(!contract) return res.status(404).end()
@@ -57,7 +57,7 @@ app.get('/jobs/unpaid',getProfile ,async (req, res) =>{
               }
             }]
           });
-        
+
         if (!jobs) {
             return res.status(404).json({"data": "not found"});
         }
@@ -65,7 +65,7 @@ app.get('/jobs/unpaid',getProfile ,async (req, res) =>{
     } catch (error) {
         console.error(error);
         res.status(500).json({error: error.message});
-    }        
+    }
 });
 
 
@@ -73,7 +73,7 @@ app.post('/jobs/:job_id/pay', getProfile, async (req, res) =>{
     const { Job, Profile, Contract } = req.app.get('models')
     const profile = req.profile;
     const job = await Job.findOne({where: {id: req.params.job_id}})
-    
+
     if(!job) return res.status(404).end()
     if(profile.type !== 'client') return res.status(401).end()
     if(profile.balance < job.price) return res.status(402).end()
@@ -88,14 +88,14 @@ app.post('/jobs/:job_id/pay', getProfile, async (req, res) =>{
             if (!contractor) {
                 throw new Error('Contractor not found');
             }
-            
+
             await profile.update({ balance: profile.balance - job.price }, { transaction: t });
             await contractor.update({ balance: contractor.balance + job.price }, { transaction: t });
             await job.update({ paid: true, paymentDate: new Date() }, { transaction: t });
             return { profile, contractor, job };
-            
+
         });
-        
+
         console.log('Transaction has been committed', result);
         return res.json({data: result});
       } catch (error) {
@@ -115,7 +115,7 @@ app.post('/balances/deposit/:userId', getProfile, async (req, res) =>{
             await profile.update({ balance: profile.balance + deposit }, { transaction: t });
             return { profile };
         });
-        
+
         console.log('Transaction has been committed', result);
         return res.json({data: result});
       } catch (error) {
@@ -157,7 +157,7 @@ app.get('/admin/best-profession', async (req, res) =>{
         limit: 1,
         raw: true
     });
-    
+
     return res.json(result);
 });
 
