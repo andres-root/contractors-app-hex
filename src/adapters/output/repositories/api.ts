@@ -5,6 +5,9 @@ import { Contract, Job, Profile } from "../../../core/models";
 import { ContractOutput } from '../../../core/models/contract';
 import { JobOutput } from '../../../core/models/job';
 
+import db from "../db/db";
+
+
 
 export class ApiRepository implements ApiOutputPort {
 
@@ -69,9 +72,48 @@ export class ApiRepository implements ApiOutputPort {
     }
   }
 
-  // async updateJobPayment(id: number): Promise<any> {
-  //     return Promise.resolve({});
-  // }
+  async payJob(jobId: number, profileId: number): Promise<JobOutput> {
+    try {
+      const result = await db.transaction(async (t) => {
+        const profile = await Profile.findOne({ where: { id: profileId } });
+
+        if (!profile) {
+            throw new Error('Profile not found');
+        }
+
+        if (profile.balance === undefined || profile.balance === null || profile.balance <= 0 ) {
+            throw new Error('Profile balance not enough');
+        }
+
+        const job = await Job.findOne({where: {id: jobId}});
+        if (!job) {
+            throw new Error('Job not found');
+        }
+        const contract = await Contract.findOne({ where: { id: Number(job.ContractId) } });
+
+        if (!contract) {
+            throw new Error('Contract not found');
+        }
+        const contractor = await Profile.findOne({ where: { id: Number(contract.ContractorId) } });
+
+        if (!contractor) {
+            throw new Error('Contractor not found');
+        }
+
+        await profile.update({ balance: profile.balance - job.price }, { transaction: t });
+        await contractor.update({ balance: contractor.balance + job?.price }, { transaction: t });
+        await job.update({ paid: true, paymentDate: new Date() }, { transaction: t });
+        return job;
+    });
+
+    console.log('Transaction has been committed', result);
+    return result;
+    } catch (error) {
+      console.error('Transaction was rolled back due to an error', error);
+      throw error;
+    }
+  }
+
 
   // async updateBalance(id: number, deposit: number): Promise<any> {
   //     return Promise.resolve({});

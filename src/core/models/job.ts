@@ -13,13 +13,14 @@ export interface JobAttributes {
 }
 
 export interface JobInput extends Optional<JobAttributes, "id" | "ContractId" | "paid" | "paymentDate"> {}
-export interface JobOutput extends Optional<JobAttributes, "paid" | "paymentDate" | "ContractId"> {}
+export interface JobOutput extends Required<JobAttributes> {}
 export class Job extends Model<JobAttributes, JobInput> implements JobAttributes {
   public id!: number;
   public description!: string;
   public price!: number;
   public paid!: boolean;
   public paymentDate!: Date | null;
+  public ContractId!: number;
 }
 
 Job.init(

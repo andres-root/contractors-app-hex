@@ -18,6 +18,7 @@ export class Contract extends Model<ContractAttributes, ContractInput> implement
   public id!: number;
   public terms!: string;
   public status!: 'new' | 'in_progress' | 'terminated';
+  public ContractorId!: number;
 }
 
 Contract.init(

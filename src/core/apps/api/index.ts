@@ -24,9 +24,9 @@ export class ApiApp implements ApiInputPort {
     return (await this.apiRepository.findUnpaidJobs(profileId)).map(serializeJobOutput);
   }
 
-  // async payJob(id: number): Promise<{}> {
-  //   return {}
-  // }
+  async payJob(JobId: number, profileId: number): Promise<JobAttributes> {
+    return serializeJobOutput(await this.apiRepository.payJob(JobId, profileId));
+  }
 
   // async deposit(id: number, deposit: number): Promise<{}> {
   //   return {}
