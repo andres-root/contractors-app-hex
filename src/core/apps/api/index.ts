@@ -30,8 +30,8 @@ export class ApiApp implements ApiInputPort {
     return serializeJobOutput(await this.apiRepository.payJob(JobId, profileId));
   }
 
-  async depositBalance(id: number, deposit: number, profileId: number): Promise<ProfileAttributes> {
-    return serializeProfileOutput(await this.apiRepository.depositBalance(id, deposit, profileId));
+  async depositBalance(userId: number, deposit: number): Promise<ProfileAttributes> {
+    return serializeProfileOutput(await this.apiRepository.depositBalance(userId, deposit));
   }
 
   // async bestProfession(start: string, end: string): Promise<{}> {

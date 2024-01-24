@@ -55,19 +55,25 @@ apiRouter.post("/jobs/:job_id/pay", getProfile, async (req: RequestWithProfile, 
     return res.status(500).send({ error: "failed to pay job" });
   }
 });
-//   return res.json({"data": "It works!"})
-//   const { id } = req.params;
-//   const job = await apiApp.payJob(id);
-//   res.json(job);
-// });
 
-// apiRouter.put("/balance/:id", async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   return res.json({"data": "It works!"})
-//   const { deposit } = req.body;
-//   const balance = await apiApp.deposit(id, deposit);
-//   res.json(balance);
-// });
+
+apiRouter.put("/balance/deposit/:userId", getProfile, async (req: RequestWithProfile, res: Response) => {
+    const { userId } = req.params;
+    const { deposit } = req.body;
+    const profile = req.profile;
+
+    if(profile?.type !== 'client') {return res.status(401).json({error: 'Unauthorized'})}
+    if(deposit > profile?.balance * 0.25) return res.status(402).json({error: 'Deposit limit exceeded'})
+
+    try {
+      const profile = await apiApp.depositBalance(Number(userId), deposit);
+      return res.status(200).send({
+        data: profile
+      });
+    } catch (error) {
+      return res.status(500).send({ error: "failed to deposit balance" });
+    }
+});
 
 // apiRouter.get("/best-profession", async (req: Request, res: Response) => {
 //   return res.json({"data": "It works!"})

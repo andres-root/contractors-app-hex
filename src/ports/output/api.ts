@@ -8,7 +8,7 @@ export interface ApiOutputPort {
   findAllContracts(profileId: number): Promise<ContractOutput[]>
   findUnpaidJobs(profileId: number): Promise<JobOutput[]>;
   payJob(jobId: number, profileId: number): Promise<JobOutput>;
-  depositBalance(id: number, deposit: number, profileId: number): Promise<ProfileOutput>;
+  depositBalance(userId: number, deposit: number): Promise<ProfileOutput>;
   // getBestProfession(start: string, end: string): Promise<any>;
   // getBestClients(start: string, end: string): Promise<any[]>;
 }

@@ -7,7 +7,7 @@ export interface ApiInputPort {
   getAllContracts(profileId: number): Promise<ContractInterface[]>;
   getUnpaidJobs(profileId: number): Promise<JobAttributes[]>;
   payJob(jobId: number, profileId: number): Promise<JobAttributes>;
-  depositBalance(id: number, deposit: number, profileId: number): Promise<ProfileAttributes>;
+  depositBalance(userId: number, deposit: number): Promise<ProfileAttributes>;
   // bestProfession(start: string, end: string): Promise<any>;
   // bestClients(start: string, end: string): Promise<any[]>;
 }

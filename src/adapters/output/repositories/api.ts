@@ -119,11 +119,11 @@ export class ApiRepository implements ApiOutputPort {
   }
 
 
-  async depositBalance(id: number, deposit: number, profileId: number): Promise<ProfileOutput> {
+  async depositBalance(userId: number, deposit: number): Promise<ProfileOutput> {
     try {
 
       const result = await db.transaction(async (t) => {
-        const profile = await Profile.findOne({ where: { id: profileId } });
+        const profile = await Profile.findOne({ where: { id: userId } });
 
         if (!profile) {
           throw new Error('Profile not found');
