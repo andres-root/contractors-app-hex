@@ -1,13 +1,13 @@
-import { Op } from 'sequelize';
+import sequelize, { Op } from 'sequelize';
 
 import { ApiOutputPort } from '../../../ports/output/api';
 import { Contract, Job, Profile } from "../../../core/models";
 import { ContractOutput } from '../../../core/models/contract';
 import { JobOutput } from '../../../core/models/job';
 import { ProfileOutput } from '../../../core/models/profile';
+import { BestProfessionOutput, BestClientsOutput } from '../../../core/models/interfaces';
 
 import db from "../db/db";
-
 
 
 export class ApiRepository implements ApiOutputPort {
@@ -149,11 +149,76 @@ export class ApiRepository implements ApiOutputPort {
     }
   }
 
-  // async getBestProfession(start: string, end: string): Promise<any> {
-  //     return Promise.resolve({});
-  // }
+  async findBestProfession(startDate: string, endDate: string): Promise<BestProfessionOutput> {
+    try {
+      // TODO: Fix type
+      const result: any = await Job.findAll({
+        attributes: [
+          [sequelize.fn('SUM', sequelize.col('price')), 'total_earnings']
+        ],
+        include: [{
+          model: Contract,
+          attributes: [],
+          include: [{
+              model: Profile,
+              as: 'Contractor',
+              attributes: ['profession'],
+              where: {
+                type: 'contractor'
+              }
+            }]
+          }],
+          where: {
+            paid: true,
+            paymentDate: {
+              [Op.between]: [startDate, endDate]
+            }
+          },
+          group: ['Contract->Contractor.profession'],
+          order: [[sequelize.literal('total_earnings'), 'DESC']],
+          limit: 1,
+          raw: true
+      });
+      return result;
+    } catch (error) {
+      console.error('error fetching best profession:', error);
+      throw error;
+    }
+  }
 
-  // async getBestClients(start: string, end: string): Promise<any[]> {
-  //     return Promise.resolve([]);
-  // }
+  async findBestClients(startDate: string, endDate: string, limit: number): Promise<BestClientsOutput[]> {
+    try {
+      // TODO: Fix type
+      const result: any = await Job.findAll({
+        attributes: [
+          'Contract->Client.id',
+          [sequelize.fn('SUM', sequelize.col('Job.price')), 'paid']
+        ],
+        include: [{
+          model: Contract,
+          attributes: [],
+          include: [{
+            model: Profile,
+            as: 'Client',
+            attributes: [[sequelize.fn('concat', sequelize.col('firstName'), ' ', sequelize.col('lastName')), 'fullName']],
+          }]
+        }],
+        where: {
+          paid: true,
+          paymentDate: {
+            [Op.between]: [startDate, endDate]
+          }
+        },
+        group: ['Contract->Client.id'],
+        order: [[sequelize.literal('paid'), 'DESC']],
+        limit: limit,
+        raw: true
+      });
+
+      return result;
+    } catch (error) {
+      console.error('error fetching best profession:', error);
+      throw error;
+    }
+  }
 }

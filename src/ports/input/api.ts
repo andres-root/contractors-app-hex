@@ -1,6 +1,7 @@
 import { ContractInterface } from "../../adapters/input/rest/serializers/contract";
 import { JobAttributes } from "../../core/models/job";
 import { ProfileAttributes } from "../../core/models/profile";
+import { BestProfessionOutput, BestClientsOutput } from "../../core/models/interfaces";
 
 export interface ApiInputPort {
   getContractsById(id: number, profileId: number): Promise<ContractInterface>
@@ -8,6 +9,6 @@ export interface ApiInputPort {
   getUnpaidJobs(profileId: number): Promise<JobAttributes[]>;
   payJob(jobId: number, profileId: number): Promise<JobAttributes>;
   depositBalance(userId: number, deposit: number): Promise<ProfileAttributes>;
-  // bestProfession(start: string, end: string): Promise<any>;
-  // bestClients(start: string, end: string): Promise<any[]>;
+  getBestProfession(start: string, end: string): Promise<BestProfessionOutput>;
+  getBestClients(start: string, end: string, limit: number): Promise<BestClientsOutput[]>;
 }

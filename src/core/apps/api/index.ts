@@ -5,6 +5,7 @@ import { JobAttributes } from "../../../core/models/job";
 import { serializeJobOutput } from "../../../adapters/input/rest/serializers/job";
 import { ProfileAttributes } from "../../models/profile";
 import { serializeProfileOutput } from "../../../adapters/input/rest/serializers/profile";
+import { BestProfessionOutput, BestClientsOutput } from "../../models/interfaces";
 
 
 export class ApiApp implements ApiInputPort {
@@ -34,11 +35,11 @@ export class ApiApp implements ApiInputPort {
     return serializeProfileOutput(await this.apiRepository.depositBalance(userId, deposit));
   }
 
-  // async bestProfession(start: string, end: string): Promise<{}> {
-  //   return {}
-  // }
+  async getBestProfession(startDate: string, endDate: string): Promise<BestProfessionOutput> {
+    return await this.apiRepository.findBestProfession(startDate, endDate);
+  }
 
-  // async bestClients(start: string, end: string):  Promise<{}[]> {
-  //   return [{}]
-  // }
+  async getBestClients(startDate: string, endDate: string, limit: number):  Promise<BestClientsOutput[]> {
+    return await this.apiRepository.findBestClients(startDate, endDate, limit);
+  }
 }

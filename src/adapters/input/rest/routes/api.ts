@@ -57,36 +57,65 @@ apiRouter.post("/jobs/:job_id/pay", getProfile, async (req: RequestWithProfile, 
 });
 
 
-apiRouter.put("/balance/deposit/:userId", getProfile, async (req: RequestWithProfile, res: Response) => {
-    const { userId } = req.params;
-    const { deposit } = req.body;
-    const profile = req.profile;
+apiRouter.post("/balances/deposit/:userId", getProfile, async (req: RequestWithProfile, res: Response) => {
+  // TODO: Fix inconcistency with balance ammount after udpate
+  const { userId } = req.params;
+  const { deposit } = req.body;
+  const profile = req.profile;
 
-    if(profile?.type !== 'client') {return res.status(401).json({error: 'Unauthorized'})}
-    if(deposit > profile?.balance * 0.25) return res.status(402).json({error: 'Deposit limit exceeded'})
+  if(profile?.type !== 'client') {return res.status(401).json({error: 'Unauthorized'})}
+  if(deposit > profile?.balance * 0.25) return res.status(402).json({error: 'Deposit limit exceeded'})
 
-    try {
-      const profile = await apiApp.depositBalance(Number(userId), deposit);
-      return res.status(200).send({
-        data: profile
-      });
-    } catch (error) {
-      return res.status(500).send({ error: "failed to deposit balance" });
-    }
+  try {
+    const profile = await apiApp.depositBalance(Number(userId), deposit);
+    return res.status(200).send({
+      data: profile
+    });
+  } catch (error) {
+    return res.status(500).send({ error: "failed to deposit balance" });
+  }
 });
 
-// apiRouter.get("/best-profession", async (req: Request, res: Response) => {
-//   return res.json({"data": "It works!"})
-//   const { start, end } = req.query;
-//   const profession = await apiApp.bestProfession(start, end);
-//   res.json(profession);
-// });
+apiRouter.get("/admin/best-profession", async (req: Request, res: Response) => {
+  const startDate = req.query.start;
+  const endDate = req.query.end;
 
-// apiRouter.get("/best-clients", async (req: Request, res: Response) => {
-//   return res.json({"data": "It works!"})
-//   const { start, end } = req.query;
-//   const clients = await apiApp.bestClients(start, end);
-//   res.json(clients);
-// });
+  if (!startDate || !endDate) {
+    return res.status(400).send({ error: "start and end date are required" });
+  }
+
+  if (typeof startDate !== 'string' || typeof endDate !== 'string') {
+    return res.status(400).send({ error: "start and end dates must be strings" });
+  }
+
+  try {
+    const bestProfession = await apiApp.getBestProfession(start, end);
+    res.status(200).json(bestProfession);
+
+  } catch (error) {
+    return res.status(500).send({ error: "failed to get best profession" });
+  }
+});
+
+apiRouter.get("/best-clients", async (req: Request, res: Response) => {
+    const startDate = req.query.start;
+    const endDate = req.query.end;
+    const limit = req.query.limit || 2;
+
+    if (!startDate || !endDate) {
+      return res.status(400).send({ error: "start and end date are required" });
+    }
+
+    if (typeof startDate !== 'string' || typeof endDate !== 'string') {
+      return res.status(400).send({ error: "start and end dates must be strings" });
+    }
+
+    try {
+      const bestClients = await apiApp.getBestClients(startDate, endDate, Number(limit));
+      res.status(200).json(bestClients);
+    } catch (error) {
+      return res.status(500).send({ error: "failed to get best clients" });
+    }
+});
 
 export default apiRouter;
