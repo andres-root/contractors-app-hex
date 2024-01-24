@@ -89,7 +89,7 @@ apiRouter.get("/admin/best-profession", async (req: Request, res: Response) => {
   }
 
   try {
-    const bestProfession = await apiApp.getBestProfession(start, end);
+    const bestProfession = await apiApp.getBestProfession(startDate, endDate);
     res.status(200).json(bestProfession);
 
   } catch (error) {
