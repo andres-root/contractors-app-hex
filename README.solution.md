@@ -11,7 +11,7 @@ I could not finish this implementation on the 3 hour window but I created placeh
 
 
 ## Folder Structure:
-
+```
 src:
     Adapters:
         input: // Anything that drives the app. Example, REST API made in express:
@@ -43,4 +43,5 @@ Tests:
     e2e:
         // entire flows shold be tested here
 
+```
 
