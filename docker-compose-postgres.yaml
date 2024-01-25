@@ -44,16 +44,16 @@ services:
       - 5433:5432
     expose:
       - 5433
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    volumes:
-      - .:/usr/src/app
-    env_file:
-      - ./.env
-    ports:
-      - 3000:3000
-    depends_on:
-      db:
-        condition: service_healthy
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #   volumes:
+  #     - .:/usr/src/app
+  #   env_file:
+  #     - ./.env
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
